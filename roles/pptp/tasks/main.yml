@@ -5,3 +5,51 @@
     state: present
   with_items:
     - pptpd
+
+### /etc/ppp directories pptpd conf
+- name: setup user & password
+  copy:
+    src: chap-secrets
+    dest: /etc/ppp/chap-secrets
+    owner: root
+    group: root
+    mode: 0600
+
+- name: setup pptpd option
+  copy:
+    src: options.pptpd
+    dest: /etc/ppp/options.pptpd
+    owner: root
+    group: root
+    mode: 0644
+
+### /etc pptpd conf
+- name: setup pptpd conf
+  copy:
+    src: pptpd.conf
+    dest: /etc/pptpd.conf
+    owner: root
+    group: root
+    mode: 0644
+
+- name: setup ipv4 ip forward
+  copy:
+    src: sysctl.conf
+    dest: /etc/sysctl.conf
+    owner: root
+    group: root
+    mode: 0644
+
+- name: sysctl reload
+  command: sysctl -p
+
+- name: systemctl start pptpd
+  service:
+    name: pptpd
+    state=started
+
+- name: systemctl enable pptpd
+  service:
+    name: pptpd
+    enabled: yes
+

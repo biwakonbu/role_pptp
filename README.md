@@ -3,7 +3,7 @@ pptpd (vpn) サーバセットアップ用 ansible ファイル。
 
 ## 対象
 
-- CentOS 6.8 (Sakura の VPS) 対象
+- CentOS 7.2 (Sakura の VPS) 対象
 
 ## 最初にやっておく事
 

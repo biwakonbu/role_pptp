@@ -46,10 +46,39 @@
 - name: systemctl start pptpd
   service:
     name: pptpd
-    state=started
+    state: started
 
 - name: systemctl enable pptpd
   service:
     name: pptpd
     enabled: yes
 
+### firewalld config
+# port forward: IN/PPTP 1723/tcp -> OUT/GRE 47/protocol
+# IP masquerade: On
+
+# IN/PPTP 1723/tcp accept
+- name: port accept 1723/tcp
+  command: firewall-cmd --zone=public --add-port=1723/tcp
+- name: port accept 1723/tcp for permanent
+  command: firewall-cmd --permanent --zone=public --add-port=1723/tcp
+# OUT/GRE 47/protocol accept
+- name: port accept 47/protocol
+  command: firewall-cmd --zone=public --add-rich-rule='rule protocol value="47" accept'
+- name: port accept 47/protocol for permanent
+  command: firewall-cmd --permanent --zone=public --add-rich-rule='rule protocol value="47" accept'
+# add direct rule
+- name: ipv4 GRE port accept
+  command: firewall-cmd --direct --add-rule ipv4 filter INPUT 0 -p gre -j ACCEPT
+- name: ipv4 GRE port accept for permanent
+  command: firewall-cmd --permanent --direct --add-rule ipv4 filter INPUT 0 -p gre -j ACCEPT
+# IP masquerade On
+- name: IP masquerade on
+  command: firewall-cmd --zone=public --add-masquerade
+- name: IP masquerade on for permanent
+  command: firewall-cmd --permanent --zone=public --add-masquerade
+
+- name: systemctl restart firewalld.service
+  service:
+    name: firewalld
+    state: restarted

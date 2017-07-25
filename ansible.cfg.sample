@@ -1,0 +1,4 @@
+[defaults]
+hostfile = ./hosts
+remote_user = root
+private_key_file = ~/.ssh/sample.rsa

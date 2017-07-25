@@ -4,6 +4,7 @@
 ### ansible ###
 ansible.cfg
 hosts
+roles/pptp/files/chap-secrets
 
 ### Emacs ###
 # -*- mode: gitignore; -*-
